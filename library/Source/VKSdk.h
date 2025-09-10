@@ -56,7 +56,7 @@ typedef NS_OPTIONS(NSUInteger, VKAuthorizationOptions) {
 
 /**
  SDK events delegate protocol.
- 
+
  This protocol may be implemented by any count of objects, but don't forget unregistering deallocated delegates.
  */
 @protocol VKSdkDelegate <NSObject>
@@ -64,7 +64,7 @@ typedef NS_OPTIONS(NSUInteger, VKAuthorizationOptions) {
 
 /**
  Notifies about authorization was completed, and returns authorization result with new token or error.
- 
+
  @param result contains new token or error, retrieved after VK authorization.
  */
 - (void)vkSdkAccessAuthorizationFinishedWithResult:(VKAuthorizationResult *)result;
@@ -78,16 +78,16 @@ typedef NS_OPTIONS(NSUInteger, VKAuthorizationOptions) {
 
 /**
  Notifies about authorization state was changed, and returns authorization result with new token or error.
- 
+
  If authorization was successfull, also contains user info.
- 
+
  @param result contains new token or error, retrieved after VK authorization
  */
 - (void)vkSdkAuthorizationStateUpdatedWithResult:(VKAuthorizationResult *)result;
 
 /**
  Notifies about access token has been changed
- 
+
  @param newToken new token for API requests
  @param oldToken previous used token
  */
@@ -95,7 +95,7 @@ typedef NS_OPTIONS(NSUInteger, VKAuthorizationOptions) {
 
 /**
  Notifies about existing token has expired (by timeout). This may occurs if you requested token without no_https scope.
- 
+
  @param expiredToken old token that has expired.
  */
 - (void)vkSdkTokenHasExpired:(VKAccessToken *)expiredToken;
@@ -104,13 +104,13 @@ typedef NS_OPTIONS(NSUInteger, VKAuthorizationOptions) {
 
 /**
  SDK UI delegate protocol.
- 
+
  This delegate used for managing UI events, when SDK required user action.
  */
 @protocol VKSdkUIDelegate <NSObject>
 /**
  Pass view controller that should be presented to user. Usually, it's an authorization window.
- 
+
  @param controller view controller that must be shown to user
  */
 - (void)vkSdkShouldPresentViewController:(UIViewController *)controller;
@@ -118,7 +118,7 @@ typedef NS_OPTIONS(NSUInteger, VKAuthorizationOptions) {
 /**
  Calls when user must perform captcha-check.
  If you implementing this method by yourself, call -[VKError answerCaptcha:] method for captchaError with user entered answer.
- 
+
  @param captchaError error returned from API. You can load captcha image from <b>captchaImg</b> property.
  */
 - (void)vkSdkNeedCaptchaEnter:(VKError *)captchaError;
@@ -139,46 +139,46 @@ typedef NS_OPTIONS(NSUInteger, VKAuthorizationOptions) {
 
 /**
  Entry point for using VK sdk. Should be initialized at application start.
- 
+
  Typical scenario of using SDK is next:
- 
- 1) Register new standalone application on https://vk.com/editapp?act=create
- 
+
+ 1) Register new standalone application on https://vk.ru/editapp?act=create
+
  2) Setup your application delegate and Info.plist as described on project page: https://github.com/VKCOM/vk-ios-sdk#how-to-set-up-vk-ios-sdk
- 
+
  3) Initialize SDK with your VK application ID.
- 
+
     VKSdk *sdkInstance = [VKSdk initializeWithAppId:VK_APP_ID];
- 
+
  4) Register required SDK-delegates (VKSdkDelegate) and single UI-delegate (VKSdkUIDelegate).
- 
+
     [sdkInstance registerDelegate:self];
     [sdkInstance setUiDelegate:self];
- 
+
  5) Check if user already authorized.
- 
+
     [VKSdk wakeUpSession:SCOPE completeBlock:^(VKAuthorizationState state, NSError *error) {
         switch (state) {
             case VKAuthorizationAuthorized:
                 // User already autorized, and session is correct
                 break;
- 
+
             case VKAuthorizationInitialized:
                 // User not yet authorized, proceed to next step
                 break;
- 
+
             default:
             // Probably, network error occured, try call +[VKSdk wakeUpSession:completeBlock:] later
             break;
         }
     }];
- 
+
  6) If user is not authorized, call +[VKSdk authorize:] method with required scope (permission for token you required).
- 
+
     [VKSdk authorize:@[VK_PER_FRIENDS, VK_PER_WALL]];
- 
+
  7) You wait for -[VKSdkDelegate vkSdkAccessAuthorizationFinishedWithResult:] method called.
- 
+
     - (void)vkSdkAccessAuthorizationFinishedWithResult:(VKAuthorizationResult *)result {
         if (result.token) {
             // User successfully authorized, you may start working with VK API
@@ -186,7 +186,7 @@ typedef NS_OPTIONS(NSUInteger, VKAuthorizationOptions) {
             // User canceled authorization, or occured unresolving networking error. Reset your UI to initial state and try authorize user later
         }
     }
- 
+
 */
 @interface VKSdk : NSObject
 
@@ -219,15 +219,15 @@ typedef NS_OPTIONS(NSUInteger, VKAuthorizationOptions) {
 
 /**
  Initialize SDK with responder for global SDK events with default api version from VK_SDK_API_VERSION
- 
- @param appId your application id (if you haven't, you can create standalone application here https://vk.com/editapp?act=create )
+
+ @param appId your application id (if you haven't, you can create standalone application here https://vk.ru/editapp?act=create )
 */
 + (instancetype)initializeWithAppId:(NSString *)appId;
 
 /**
 Initialize SDK with responder for global SDK events.
- 
-@param appId your application id (if you haven't, you can create standalone application here https://vk.com/editapp?act=create )
+
+@param appId your application id (if you haven't, you can create standalone application here https://vk.ru/editapp?act=create )
 @param version if you want to use latest API version, pass required version here
 */
 + (instancetype)initializeWithAppId:(NSString *)appId
@@ -235,14 +235,14 @@ Initialize SDK with responder for global SDK events.
 
 /**
  Adds a weak object reference to an object implementing the VKSdkDelegate protocol.
- 
+
  @param delegate your object implementing delegate protocol
  */
 - (void)registerDelegate:(id <VKSdkDelegate>)delegate;
 
 /**
  Removes an object reference SDK delegate.
- 
+
  @param delegate your object implementing delegate protocol
  */
 - (void)unregisterDelegate:(id <VKSdkDelegate>)delegate;
@@ -254,7 +254,7 @@ Initialize SDK with responder for global SDK events.
 /**
  Starts authorization process to retrieve unlimited token. If VKapp is available in system, it will opens and requests access from user.
  Otherwise SFSafariViewController or webview will be opened for access request.
- 
+
  @param permissions array of permissions for your applications. All permissions you can
 */
 + (void)authorize:(NSArray *)permissions;
@@ -262,7 +262,7 @@ Initialize SDK with responder for global SDK events.
 /**
  Starts authorization process. If VKapp is available in system, it will opens and requests access from user.
  Otherwise SFSafariViewController or webview will be opened for access request.
- 
+
  @param permissions array of permissions for your applications. All permissions you can
  @param options special options
  */
@@ -274,7 +274,7 @@ Initialize SDK with responder for global SDK events.
 
 /**
  Returns token for API requests.
- 
+
  @return Received access token or nil, if user not yet authorized
 */
 + (VKAccessToken *)accessToken;
@@ -292,7 +292,7 @@ Initialize SDK with responder for global SDK events.
 
 /**
  Checks passed URL for access token.
- 
+
  @param passedUrl url from external application
  @param sourceApplication source application (it is an optional param, because the check is performed not only by this parameter, but also by the URL scheme)
  @return YES if parsed successfully
@@ -311,7 +311,7 @@ Initialize SDK with responder for global SDK events.
 + (void)wakeUpSession:(NSArray *)permissions completeBlock:(void (^)(VKAuthorizationState state, NSError *error))wakeUpBlock;
 
 /**
-Forces logout using OAuth (with VKAuthorizeController). Removes all cookies for *.vk.com.
+Forces logout using OAuth (with VKAuthorizeController). Removes all cookies for *.vk.ru.
 Has no effect for logout in VK app
 */
 + (void)forceLogout;

@@ -5,7 +5,7 @@ Library for working with VK API, authorizing through VK app, using VK API method
 Prepare for Using VK SDK
 ----------
 
-To use VK SDK primarily you need to create a new Standalone VK application [here](https://vk.com/editapp?act=create). Choose a title and confirm the action via SMS and you will be redirected to the application settings page.
+To use VK SDK primarily you need to create a new Standalone VK application [here](https://vk.ru/editapp?act=create). Choose a title and confirm the action via SMS and you will be redirected to the application settings page.
 You will need your APP_ID to use the library. Fill in the App Bundle for iOS field.
 
 Setup URL schema of Your Application
@@ -24,7 +24,7 @@ iOS 9 changes the way of applications security and way of using unsecured connec
 <dict>
     <key>NSExceptionDomains</key>
     <dict>
-        <key>vk.com</key>
+        <key>vk.ru</key>
         <dict>
             <key>NSExceptionRequiresForwardSecrecy</key>
             <false/>
@@ -158,7 +158,7 @@ NSArray *SCOPE = @[@"friends", @"email"];
     }
 }];
 ```
-You will find full list of available SCOPE permission [here](https://vk.com/dev/permissions)
+You will find full list of available SCOPE permission [here](https://vk.ru/dev/permissions)
 
 Check out the VKAuthorizationState parameter. You can get several states:
 * VKAuthorizationInitialized – means the SDK is ready to work, and you can authorize user with `+authorize:` method. Probably, an old session has expired, and we wiped it out. *This is not an error.*
@@ -289,7 +289,7 @@ Share dialog allows you to create a user friendly dialog for sharing text and ph
 VKShareDialogController *shareDialog = [VKShareDialogController new]; //1
 shareDialog.text         = @"This post created using #vksdk #ios"; //2
 shareDialog.vkImages     = @[@"-10889156_348122347",@"7840938_319411365",@"-60479154_333497085"]; //3
-shareDialog.shareLink    = [[VKShareLink alloc] initWithTitle:@"Super puper link, but nobody knows" link:[NSURL URLWithString:@"https://vk.com/dev/ios_sdk"]]; //4
+shareDialog.shareLink    = [[VKShareLink alloc] initWithTitle:@"Super puper link, but nobody knows" link:[NSURL URLWithString:@"https://vk.ru/dev/ios_sdk"]]; //4
 [shareDialog setCompletionHandler:^(VKShareDialogControllerResult result) {
     [self dismissViewControllerAnimated:YES completion:nil];
 }]; //5
@@ -318,7 +318,7 @@ Pay attention to the fact, that a VK App has it own Share extension since versio
 Check the example below to understand how it works:
 
 ```
-NSArray *items = @[[UIImage imageNamed:@"apple"], @"Check out information about VK SDK" , [NSURL URLWithString:@"https://vk.com/dev/ios_sdk"]]; //1
+NSArray *items = @[[UIImage imageNamed:@"apple"], @"Check out information about VK SDK" , [NSURL URLWithString:@"https://vk.ru/dev/ios_sdk"]]; //1
 UIActivityViewController *activityViewController = [[UIActivityViewController alloc]
                                                     initWithActivityItems:items
                                                     applicationActivities:@[[VKActivity new]]]; //2

@@ -123,8 +123,8 @@ NSString *VK_AUTHORIZE_URL_STRING = @"vkauthorize://authorize";
     if (ctx.displayType) {
         params[@"display"] = ctx.displayType;
     }
-    
-    return [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", ctx.authPrefix ?: @"https://oauth.vk.com/authorize", [VKUtil queryStringFromParams:params]]];
+
+    return [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", ctx.authPrefix ?: @"https://oauth.vk.ru/authorize", [VKUtil queryStringFromParams:params]]];
 }
 
 #pragma mark View prepare
@@ -337,7 +337,7 @@ NSString *VK_AUTHORIZE_URL_STRING = @"vkauthorize://authorize";
     res.revoke = revoke;
     res.clientId = clientId;
     res.displayType = displayType;
-    
+
     switch (authType) {
         case VKAuthorizationTypeApp:
             res.authPrefix = VK_AUTHORIZE_URL_STRING;
@@ -351,7 +351,7 @@ NSString *VK_AUTHORIZE_URL_STRING = @"vkauthorize://authorize";
             res.responseType = @"token";
             break;
     }
-    
+
     return res;
 }
 

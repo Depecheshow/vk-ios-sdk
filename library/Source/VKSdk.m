@@ -152,7 +152,7 @@ static NSString *VK_ACCESS_TOKEN_DEFAULTS_KEY = @"VK_ACCESS_TOKEN_DEFAULTS_KEY_D
     if (instance.authState == VKAuthorizationAuthorized) {
         instance.authState = VKAuthorizationInitialized;
     }
-    
+
     instance.permissions = [permissionsSet copy];
     permissions = [permissionsSet allObjects];
 
@@ -173,26 +173,26 @@ static NSString *VK_ACCESS_TOKEN_DEFAULTS_KEY = @"VK_ACCESS_TOKEN_DEFAULTS_KEY_D
     NSURL *urlToOpen = [VKAuthorizeController buildAuthorizationURLWithContext:authContext];
 
     if (vkApp) {
-        
+
         UIApplication *application = [UIApplication sharedApplication];
-        
+
         // Since iOS 9 there is a dialog asking user if he wants to allow the running app
         // to open another app via URL. If user rejects, then no VK SDK callbacks are called.
         // Fixing this using new -[UIApplication openURL:options:completionHandler:] method (iOS 10+).
-        
+
 #ifdef __AVAILABILITY_INTERNAL__IPHONE_10_0_DEP__IPHONE_10_0
         if ([application respondsToSelector:@selector(openURL:options:completionHandler:)]) {
-            
+
             NSDictionary *options = @{ UIApplicationOpenURLOptionUniversalLinksOnly: @NO };
-            
+
             [application openURL:urlToOpen options:options completionHandler:^(BOOL success) {
-                
+
                 if (!success) {
-                    
+
                     VKMutableAuthorizationResult *result = [VKMutableAuthorizationResult new];
                     result.state = VKAuthorizationError;
                     result.error = [NSError errorWithVkError:[VKError errorWithCode:VK_API_CANCELED]];
-                    
+
                     [[VKSdk instance] notifyDelegate:@selector(vkSdkAccessAuthorizationFinishedWithResult:) obj:result];
                 }
             }];
@@ -202,9 +202,9 @@ static NSString *VK_ACCESS_TOKEN_DEFAULTS_KEY = @"VK_ACCESS_TOKEN_DEFAULTS_KEY_D
 #else
         [application openURL:urlToOpen];
 #endif
-    
+
         instance.authState = VKAuthorizationExternal;
-    
+
     } else if (safariEnabled && [SFSafariViewController class] && instance.authState < VKAuthorizationSafariInApp) {
         SFSafariViewController *viewController = [[SFSafariViewController alloc] initWithURL:urlToOpen];
         viewController.delegate = instance;
@@ -268,12 +268,12 @@ static NSString *VK_ACCESS_TOKEN_DEFAULTS_KEY = @"VK_ACCESS_TOKEN_DEFAULTS_KEY_D
             instance.presentedSafariViewController = nil;
         }
     };
-    
+
     void (^notifyAuthorization)(VKAccessToken *, VKError *) = ^(VKAccessToken *token, VKError *error) {
         [self setAccessToken:token];
-        
+
         VKAuthorizationState prevState = vkSdkInstance.authState;
-        
+
         VKMutableAuthorizationResult *res = [VKMutableAuthorizationResult new];
         res.error = error ? [NSError errorWithVkError:error] : nil;
         res.token = token;
@@ -301,7 +301,7 @@ static NSString *VK_ACCESS_TOKEN_DEFAULTS_KEY = @"VK_ACCESS_TOKEN_DEFAULTS_KEY_D
         } else {
             hideViews();
         }
-        
+
         [instance notifyDelegate:@selector(vkSdkAccessAuthorizationFinishedWithResult:) obj:res];
 
     };
@@ -316,7 +316,7 @@ static NSString *VK_ACCESS_TOKEN_DEFAULTS_KEY = @"VK_ACCESS_TOKEN_DEFAULTS_KEY_D
         return NO;
     }
     NSDictionary *parametersDict = [VKUtil explodeQueryString:parametersString];
-    BOOL inAppCheck = [[passedUrl host] isEqual:@"oauth.vk.com"];
+    BOOL inAppCheck = [[passedUrl host] isEqual:@"oauth.vk.ru"];
 
     void (^throwError)(void) = ^{
         VKError *error = [VKError errorWithQuery:parametersDict];
@@ -390,7 +390,7 @@ static NSString *VK_ACCESS_TOKEN_DEFAULTS_KEY = @"VK_ACCESS_TOKEN_DEFAULTS_KEY_D
     NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
 
     for (NSHTTPCookie *cookie in cookies)
-        if (NSNotFound != [cookie.domain rangeOfString:@"vk.com"].location) {
+        if (NSNotFound != [cookie.domain rangeOfString:@"vk.ru"].location) {
             [[NSHTTPCookieStorage sharedHTTPCookieStorage]
                     deleteCookie:cookie];
         }
